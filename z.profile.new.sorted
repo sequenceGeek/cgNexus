@@ -1,0 +1,214 @@
+        1   10.964   10.964   23.682   23.682 cgNexus.py:205(load)
+  1000000   10.012    0.000   10.896    0.000 cgLuckyCharmsFlat.py:24(stringToIntList)
+  2000020    4.212    0.000    4.212    0.000 cgNexus.py:108(__setattr__)
+  1000001    3.501    0.000    6.746    0.000 cgNexus.py:128(nextID)
+  2000012    1.941    0.000    1.941    0.000 {method 'split' of 'str' objects}
+        1    1.736    1.736   33.131   33.131 test.py:10(testNX)
+  1000001    0.397    0.000    0.397    0.000 cgLuckyCharmsFlat.py:54(returnSelf)
+  1000007    0.367    0.000    0.367    0.000 {method 'strip' of 'str' objects}
+        1    0.297    0.297   33.427   33.427 bioLibCG.py:727(submitArgs)
+        1    0.082    0.082   33.659   33.659 test.py:1(<module>)
+        1    0.012    0.012    0.016    0.016 socket.py:44(<module>)
+        1    0.011    0.011    0.022    0.022 cgNexus.py:1(<module>)
+        1    0.010    0.010    0.069    0.069 bioLibCG.py:2(<module>)
+        1    0.008    0.008    0.019    0.019 subprocess.py:377(<module>)
+        8    0.007    0.001    0.009    0.001 collections.py:13(namedtuple)
+        1    0.006    0.006    0.011    0.011 pickle.py:25(<module>)
+        1    0.006    0.006    0.036    0.036 urllib.py:23(<module>)
+      118    0.006    0.000    0.008    0.000 sre_compile.py:213(_optimize_charset)
+    115/7    0.005    0.000    0.014    0.002 sre_parse.py:385(_parse)
+        1    0.004    0.004    0.004    0.004 cgMath.py:1(<module>)
+        1    0.004    0.004    0.004    0.004 pickle.py:827(Unpickler)
+        1    0.004    0.004    0.004    0.004 random.py:40(<module>)
+        1    0.004    0.004    0.008    0.008 bioLibJA.py:1(<module>)
+    263/7    0.004    0.000    0.016    0.002 sre_compile.py:38(_compile)
+        1    0.003    0.003    0.003    0.003 collections.py:1(<module>)
+        1    0.003    0.003    0.003    0.003 compareData.py:1(<module>)
+        1    0.003    0.003    0.003    0.003 socket.py:174(_socketobject)
+        1    0.003    0.003    0.004    0.004 cgIndex.py:2(<module>)
+        1    0.003    0.003    0.007    0.007 cgFile.py:1(<module>)
+        1    0.003    0.003    0.047    0.047 inspect.py:25(<module>)
+  379/125    0.003    0.000    0.003    0.000 sre_parse.py:146(getwidth)
+        1    0.002    0.002    0.002    0.002 dis.py:1(<module>)
+        1    0.002    0.002    0.002    0.002 theTable.py:1(<module>)
+        1    0.002    0.002    0.003    0.003 ssl.py:56(<module>)
+        1    0.002    0.002    0.010    0.010 urlparse.py:5(<module>)
+        1    0.002    0.002    0.035    0.035 tokenize.py:23(<module>)
+        1    0.002    0.002    0.049    0.049 cgAutoKeyWord.py:1(<module>)
+        1    0.002    0.002   33.660   33.660 {execfile}
+     1189    0.002    0.000    0.003    0.000 sre_parse.py:136(__getitem__)
+       20    0.002    0.000    0.002    0.000 sre_compile.py:264(_mk_bitmap)
+        4    0.002    0.001    0.002    0.001 {open}
+      909    0.002    0.000    0.003    0.000 sre_parse.py:188(__next)
+      118    0.001    0.000    0.009    0.000 sre_compile.py:184(_compile_charset)
+     1218    0.001    0.000    0.001    0.000 {isinstance}
+      124    0.001    0.000    0.034    0.000 re.py:229(_compile)
+     1280    0.001    0.000    0.001    0.000 {chr}
+      257    0.001    0.000    0.001    0.000 urllib.py:1165(<genexpr>)
+      257    0.001    0.000    0.001    0.000 urllib.py:1166(<genexpr>)
+      257    0.001    0.000    0.001    0.000 urlparse.py:275(<genexpr>)
+      257    0.001    0.000    0.001    0.000 urlparse.py:276(<genexpr>)
+     3552    0.001    0.000    0.001    0.000 {method 'append' of 'list' objects}
+3836/3686    0.001    0.000    0.001    0.000 {len}
+     57/7    0.001    0.000    0.014    0.002 sre_parse.py:307(_parse_sub)
+      610    0.001    0.000    0.001    0.000 {min}
+      713    0.001    0.000    0.001    0.000 sre_parse.py:201(match)
+      737    0.001    0.000    0.003    0.000 sre_parse.py:207(get)
+
+
+       10    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {binascii.hexlify}
+        1    0.000    0.000    0.000    0.000 bioLibCG.py:424(cgTimer)
+        1    0.000    0.000    0.000    0.000 bioLibCG.py:780(dominantSpotter)
+        1    0.000    0.000    0.000    0.000 bioLibCG.py:797(MyError)
+        1    0.000    0.000    0.000    0.000 bioLibCG.py:840(cgPrint)
+        1    0.000    0.000    0.000    0.000 cgAutoCast.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 cgClusters.py:16(cgClusters)
+        1    0.000    0.000    0.000    0.000 cgClusters.py:2(<module>)
+        1    0.000    0.000    0.000    0.000 cgConfig.py:14(cgConfig)
+        1    0.000    0.000    0.000    0.000 cgDegPeak.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 cgDegPeak.py:5(Peak)
+        1    0.000    0.000    0.000    0.000 cgDL.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 cgFile.py:36(cgFile)
+        1    0.000    0.000    0.000    0.000 cgFile.py:40(__init__)
+        1    0.000    0.000    0.000    0.000 cgIndex.py:120(lineIndex)
+        1    0.000    0.000    0.000    0.000 cgLuckyCharmsFlat.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 cgNexusFlat.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 cgNexusFlat.py:44(Field)
+        1    0.000    0.000    0.000    0.000 cgNexusFlat.py:65(Nexus)
+        1    0.000    0.000    0.000    0.000 cgNexus.py:188(initializeMasterDict)
+        1    0.000    0.000    0.000    0.000 cgNexus.py:202(linkIDsToColumn)
+        1    0.000    0.000    0.000    0.000 cgNexus.py:54(Field)
+        1    0.000    0.000    0.000    0.000 cgNexus.py:75(Nexus)
+        1    0.000    0.000    0.000    0.000 cgNexus.py:77(__init__)
+        1    0.000    0.000    0.000    0.000 cgSort.py:2(<module>)
+        1    0.000    0.000    0.000    0.000 cgSort.py:7(returnChromToNumDict)
+        1    0.000    0.000    0.000    0.000 {function seed at 0x176c9500}
+        1    0.000    0.000    0.000    0.000 __future__.py:48(<module>)
+        1    0.000    0.000    0.000    0.000 __future__.py:74(_Feature)
+        1    0.000    0.000    0.000    0.000 genericpath.py:47(getsize)
+        1    0.000    0.000    0.000    0.000 inspect.py:618(EndOfBlock)
+        1    0.000    0.000    0.000    0.000 inspect.py:620(BlockFinder)
+        1    0.000    0.000    0.000    0.000 keyword.py:11(<module>)
+        1    0.000    0.000    0.000    0.000 {math.exp}
+        1    0.000    0.000    0.000    0.000 {math.sqrt}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 {method 'iterkeys' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 {method 'lower' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'sort' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 opcode.py:5(<module>)
+        1    0.000    0.000    0.000    0.000 os.py:35(_get_exports_list)
+        1    0.000    0.000    0.000    0.000 os.py:747(urandom)
+        1    0.000    0.000    0.000    0.000 pickle.py:1253(_EmptyClass)
+        1    0.000    0.000    0.000    0.000 pickle.py:171(Pickler)
+        1    0.000    0.000    0.000    0.000 pickle.py:58(PickleError)
+        1    0.000    0.000    0.000    0.000 pickle.py:62(PicklingError)
+        1    0.000    0.000    0.000    0.000 pickle.py:69(UnpicklingError)
+        1    0.000    0.000    0.000    0.000 pickle.py:82(_Stop)
+        1    0.000    0.000    0.000    0.000 {posix.close}
+        1    0.000    0.000    0.000    0.000 {posix.open}
+        1    0.000    0.000    0.000    0.000 {posix.read}
+        1    0.000    0.000    0.000    0.000 {posix.stat}
+        1    0.000    0.000    0.000    0.000 {posix.sysconf}
+        1    0.000    0.000    0.000    0.000 random.py:643(WichmannHill)
+        1    0.000    0.000    0.000    0.000 random.py:71(Random)
+        1    0.000    0.000    0.000    0.000 random.py:793(SystemRandom)
+        1    0.000    0.000    0.000    0.000 random.py:90(__init__)
+        1    0.000    0.000    0.000    0.000 random.py:99(seed)
+        1    0.000    0.000    0.000    0.000 socket.py:162(_closedsocket)
+        1    0.000    0.000    0.000    0.000 socket.py:224(_fileobject)
+        1    0.000    0.000    0.000    0.000 ssl.py:81(SSLSocket)
+        1    0.000    0.000    0.000    0.000 <string>:1(ArgInfo)
+        1    0.000    0.000    0.000    0.000 <string>:1(ArgSpec)
+        1    0.000    0.000    0.000    0.000 <string>:1(Arguments)
+        1    0.000    0.000    0.000    0.000 <string>:1(Attribute)
+        1    0.000    0.000    0.000    0.000 <string>:1(ModuleInfo)
+        1    0.000    0.000    0.000    0.000 <string>:1(ParseResult)
+        1    0.000    0.000    0.000    0.000 <string>:1(SplitResult)
+        1    0.000    0.000    0.000    0.000 <string>:1(Traceback)
+        1    0.000    0.000    0.000    0.000 subprocess.py:389(CalledProcessError)
+        1    0.000    0.000    0.000    0.000 subprocess.py:572(Popen)
+        1    0.000    0.000    0.000    0.000 theTable.py:4(cgTest)
+        1    0.000    0.000    0.000    0.000 tokenize.py:145(TokenError)
+        1    0.000    0.000    0.000    0.000 tokenize.py:147(StopTokenizing)
+        1    0.000    0.000    0.000    0.000 tokenize.py:178(Untokenizer)
+        1    0.000    0.000    0.000    0.000 tokenize.py:45(any)
+        1    0.000    0.000    0.000    0.000 token.py:3(<module>)
+        1    0.000    0.000    0.000    0.000 traceback.py:1(<module>)
+        1    0.000    0.000    0.000    0.000 urllib.py:107(ContentTooShortError)
+        1    0.000    0.000    0.000    0.000 urllib.py:113(URLopener)
+        1    0.000    0.000    0.000    0.000 urllib.py:613(FancyURLopener)
+        1    0.000    0.000    0.000    0.000 urllib.py:843(ftpwrapper)
+        1    0.000    0.000    0.000    0.000 urllib.py:921(addbase)
+        1    0.000    0.000    0.000    0.000 urllib.py:950(addclosehook)
+        1    0.000    0.000    0.000    0.000 urllib.py:965(addinfo)
+        1    0.000    0.000    0.000    0.000 urllib.py:975(addinfourl)
+        1    0.000    0.000    0.000    0.000 urlparse.py:43(ResultMixin)
+        1    0.000    0.000    0.000    0.000 urlparse.py:86(SplitResult)
+        1    0.000    0.000    0.000    0.000 urlparse.py:94(ParseResult)
+        1    0.000    0.000    0.001    0.001 base64.py:3(<module>)
+        1    0.000    0.000    0.001    0.001 cgConfig.py:2(<module>)
+        1    0.000    0.000    0.001    0.001 cgNexus.py:153(loadFormatInfo)
+        1    0.000    0.000    0.001    0.001 cgNexus.py:175(loadTranscriptionInfo)
+        1    0.000    0.000    0.001    0.001 cgNexus.py:193(getNumberOfSlots)
+        1    0.000    0.000   33.660   33.660 <string>:1(<module>)
+       11    0.000    0.000    0.000    0.000 {hasattr}
+       11    0.000    0.000    0.000    0.000 opcode.py:31(name_op)
+      113    0.000    0.000    0.000    0.000 opcode.py:27(def_op)
+      118    0.000    0.000    0.000    0.000 {built-in method match}
+      118    0.000    0.000    0.000    0.000 sre_parse.py:140(__setitem__)
+      118    0.000    0.000    0.001    0.000 re.py:134(match)
+      118    0.000    0.000    0.001    0.000 sre_compile.py:360(_simple)
+       14    0.000    0.000    0.000    0.000 sre_compile.py:480(isstring)
+       15    0.000    0.000    0.000    0.000 cgNexusFlat.py:46(__init__)
+       16    0.000    0.000    0.000    0.000 {method 'replace' of 'str' objects}
+       19    0.000    0.000    0.000    0.000 tokenize.py:44(group)
+        2    0.000    0.000    0.000    0.000 {globals}
+        2    0.000    0.000    0.000    0.000 {math.log}
+        2    0.000    0.000    0.000    0.000 {method 'readline' of 'file' objects}
+        2    0.000    0.000    0.000    0.000 opcode.py:39(jabs_op)
+        2    0.000    0.000    0.000    0.000 tokenize.py:46(maybe)
+        2    0.000    0.000    0.002    0.001 {method 'update' of 'dict' objects}
+       21    0.000    0.000    0.000    0.000 {range}
+       23    0.000    0.000    0.000    0.000 {method 'extend' of 'list' objects}
+      263    0.000    0.000    0.000    0.000 sre_parse.py:96(__init__)
+      276    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+      280    0.000    0.000    0.000    0.000 {ord}
+      300    0.000    0.000    0.000    0.000 {method 'isalnum' of 'str' objects}
+        3    0.000    0.000    0.000    0.000 cgAutoCast.py:25(autocast)
+        3    0.000    0.000    0.000    0.000 {dir}
+      312    0.000    0.000    0.000    0.000 sre_parse.py:144(append)
+      343    0.000    0.000    0.000    0.000 collections.py:43(<genexpr>)
+       35    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+       35    0.000    0.000    0.000    0.000 {method 'join' of 'str' objects}
+       36    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+      366    0.000    0.000    0.000    0.000 sre_compile.py:24(_identityfunction)
+       38    0.000    0.000    0.000    0.000 {method 'remove' of 'list' objects}
+       38    0.000    0.000    0.000    0.000 sre_parse.py:231(_class_escape)
+       38    0.000    0.000    0.000    0.000 sre_parse.py:78(opengroup)
+       38    0.000    0.000    0.000    0.000 sre_parse.py:89(closegroup)
+        4    0.000    0.000    0.000    0.000 {method 'close' of 'file' objects}
+       43    0.000    0.000    0.000    0.000 collections.py:60(<genexpr>)
+       43    0.000    0.000    0.000    0.000 collections.py:61(<genexpr>)
+       43    0.000    0.000    0.000    0.000 {method '__contains__' of 'frozenset' objects}
+       43    0.000    0.000    0.000    0.000 {method 'isdigit' of 'str' objects}
+       43    0.000    0.000    0.001    0.000 {all}
+      566    0.000    0.000    0.001    0.000 sre_parse.py:132(__len__)
+        6    0.000    0.000    0.033    0.005 re.py:188(compile)
+       66    0.000    0.000    0.000    0.000 sre_parse.py:263(_escape)
+        7    0.000    0.000    0.000    0.000 __future__.py:75(__init__)
+        7    0.000    0.000    0.000    0.000 opcode.py:35(jrel_op)
+        7    0.000    0.000    0.000    0.000 {_sre.compile}
+        7    0.000    0.000    0.000    0.000 sre_parse.py:184(__init__)
+        7    0.000    0.000    0.000    0.000 sre_parse.py:73(__init__)
+        7    0.000    0.000    0.003    0.000 sre_compile.py:367(_compile_info)
+        7    0.000    0.000    0.014    0.002 sre_parse.py:669(parse)
+        7    0.000    0.000    0.019    0.003 sre_compile.py:486(_code)
+        7    0.000    0.000    0.033    0.005 sre_compile.py:501(compile)
+        8    0.000    0.000    0.000    0.000 cgLuckyCharmsFlat.py:57(getCasteFunction)
+        8    0.000    0.000    0.000    0.000 {locals}
+        8    0.000    0.000    0.000    0.000 {repr}
+        8    0.000    0.000    0.000    0.000 {sys._getframe}
+       88    0.000    0.000    0.000    0.000 {max}
+        9    0.000    0.000    0.031    0.003 {map}
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
