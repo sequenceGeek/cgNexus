@@ -1,1 +1,18 @@
-Flat File Loader
+'''TODO:
+  X 1) make attributes properties for non-[id] access
+        a) this means make internal id tracker
+    2) load everything on init (call it hints)
+  X 3) make format files just a txt file 
+        a) need good way to access them...
+    3) load items as they are needed
+        b) this is complicated cuz going through file every time
+        you need to load something is SLOOOOW? or is it?
+    4) fix the copy issue, should be able to return default w/o copy
+
+
+SPEED
+replace split with [:-1]
+use str.split as splitIt (no dot)
+    possibly switch to regex
+try to get rid of for loops (use comprehension/map)
+'''
