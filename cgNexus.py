@@ -1,7 +1,5 @@
 import cgLuckyCharmsFlat as cgLuckyCharms
 from copy import copy
-import bioLibCG
-import cgIndex
 import cgFile
 
 '''TODO:
@@ -31,7 +29,7 @@ def lineUpdate(lineData, data, position):
 	#put data in right position
 	if position < numSlots:
 		lineData[position] = data
-	else:
+        else:
 		#update lines that don't exist/have no values
 		for i in range(numSlots, position):
 			lineData.append('.')
@@ -208,10 +206,6 @@ class Nexus:
 	def load(self, attNames, paraInfo = [None, None]):
                 '''paraInfo is [runNumber, numberOfRuns]'''
        
-                #t = bioLibCG.cgTimer()
-                #stage_cumTime = dict( (x, 0.0) for x in (''))
-                #t.start()
-
                 if paraInfo == ['splitRun', 'splitRun']:
                         self._splitRunFlag = True
                         paraInfo = [None, None] # now treat paraInfo as if there was nothing...
@@ -272,15 +266,10 @@ class Nexus:
 				else:
 					self._attName_id_value[attName][id] = copy(self._attName_defaultValue[attName])
 
-                #print 'after loop', t.split()
                 dataFile.file.close()
                 
-		#bind attribute names to dictionaries
-                #self.bindAttributes(attNames) #getattr will get it
-
                 #bind id attribute to first attribute, they all have the same ids...
                 self.linkIDsToColumn()
-                #print 'finishing stuff', t.split()
 
         def save(self, outFN = None):
 		
