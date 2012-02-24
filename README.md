@@ -1,22 +1,22 @@
-
 #cgNexus
 
 Nexus is flat file loader (think tab spaced files) that:
-	* Easily loads and saves defined file formats
-	* Automatically casts values (from flat file) to python types when loaded inside scripts  
-	* Automatically assigns attribute names to file columns for speedier development time (think 'geneName' instead of column[5])
-	* Eases line independent parallel processes (split file --> compute --> stitch file back together)
-	* Does other stuff (e.g., eases the creation of mappings based on file columns)
+	
+ * Easily loads and saves defined file formats
+ * Automatically casts values (from flat file) to python types when loaded inside scripts  
+ * Automatically assigns attribute names to file columns for speedier development time (think 'geneName' instead of column[5])
+ * Eases execution of line independent parallel processes (split file --> compute --> stitch file back together)
+ * Does other stuff (e.g., eases the creation of mappings based on file columns)
 
 Advantages:
-	* Much faster development time!
+ * Much faster development time!
 
 Disadvantages (no free lunch :( ):
-	* slower running time
-	* often greater memory usage
+ * slower running time
+ * often greater memory usage
 		
 
-TODO:
+##TODO
   X 1) make attributes properties for non-[id] access
         a) this means make internal id tracker
     2) load everything on init (call it hints)
