@@ -4,7 +4,7 @@ import cgFile
 
 def lineUpdate(lineData, data, position):
     '''lineList must NOT contain CR.  data must be string'''
-    numSlots = len(lineData)
+    numSlots = len(lineData) #should be same every time...just pass as argument
 
     #put data in right position
     if position < numSlots:
