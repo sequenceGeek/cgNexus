@@ -30,7 +30,10 @@ TODO:
         you need to load something is SLOOOOW? or is it?
     5) fix the copy issue, should be able to return default w/o copy
     6) create add/delete row from Nexus
-    7) Nexus Generator (do not load data into memory)
+		a) if an id is added mid loop, will that change generator for while loop?
+    7) Nexus Generator (do not load data into memory, but still cast)
+		a) read only?
+		b) its possible to use the generator to save to ANOTHER FILE while running...
 	8) load without format
 		a) quickFormat('0 geneName string .', '3 partnerIDs intList 1,2,3')
 	9) Simplify Parallel Processing with helper scripts
