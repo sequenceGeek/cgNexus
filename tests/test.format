@@ -1,0 +1,3 @@
+geneName	string	.
+numReads	int	0
+otherIDs	intList	2,3

@@ -10,11 +10,13 @@ from theTable import cgTest
 def testNX(fN, fF):
 
     NX = Nexus(fN, fF)
-    NX.load(['geneName', 'geneLength', 'geneTargets'])
+    NX.load(['geneName', 'numReads', 'otherIDs'])
 
     for id in NX.ids:
         NX.id = id
         NX.geneName = 'CHANGE'
+    
+    NX.save()
 
 def testNXOld(fN, fF):
 
