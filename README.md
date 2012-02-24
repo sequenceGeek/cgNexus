@@ -1,18 +1,19 @@
-Description:
 
-	Nexus is flat file loader (think tab spaced files) that:
-		- Easily loads and saves defined file formats
-		- Automatically casts values (from flat file) to python types when loaded inside scripts  
-		- Automatically assigns attribute names to file columns for speedier development time (think 'geneName' instead of column[5])
-		- Eases line independent parallel processes (split file --> compute --> stitch file back together)
-		- Does other stuff (e.g., eases the creation of mappings based on file columns)
+#cgNexus
 
-	Advantages:
-		- Much faster development time!
+Nexus is flat file loader (think tab spaced files) that:
+	* Easily loads and saves defined file formats
+	* Automatically casts values (from flat file) to python types when loaded inside scripts  
+	* Automatically assigns attribute names to file columns for speedier development time (think 'geneName' instead of column[5])
+	* Eases line independent parallel processes (split file --> compute --> stitch file back together)
+	* Does other stuff (e.g., eases the creation of mappings based on file columns)
 
-	Disadvantages (no free lunch :( ):
-		- slower running time
-		- often greater memory usage
+Advantages:
+	* Much faster development time!
+
+Disadvantages (no free lunch :( ):
+	* slower running time
+	* often greater memory usage
 		
 
 TODO:
@@ -30,7 +31,10 @@ TODO:
         you need to load something is SLOOOOW? or is it?
     5) fix the copy issue, should be able to return default w/o copy
     6) create add/delete row from Nexus
-    7) Nexus Generator (do not load data into memory)
+		a) if an id is added mid loop, will that change generator for while loop?
+    7) Nexus Generator (do not load data into memory, but still cast)
+		a) read only?
+		b) its possible to use the generator to save to ANOTHER FILE while running...
 	8) load without format
 		a) quickFormat('0 geneName string .', '3 partnerIDs intList 1,2,3')
 	9) Simplify Parallel Processing with helper scripts

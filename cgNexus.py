@@ -81,6 +81,9 @@ class Nexus:
 
         return '\n'.join(newLines)
 
+    def goToFirstID(self):
+        self._iterIDGen = None
+
     def nextID(self):
         if self._iterIDGen:
             try:
@@ -213,6 +216,7 @@ class Nexus:
         
         #bind id attribute to first attribute, they all have the same ids...
         self.linkIDsToColumn()
+        self.id = self.ids.iterkeys().next()
 
     def save(self, outFN = None):
             
@@ -273,18 +277,25 @@ class Nexus:
         if attributeOneName == 'id':
             return copy(self._attName_id_value[attributeTwoName])
 
+        #if att1 is a list it is unhashable --> turn into tuple
+        convertToTuple = (type(self._attName_id_value[attributeOneName][self.id]) == type([]))
+
         #get requested mapping
         att1_att2 = {}
         while self.nextID():
 
-            #wont be id --> covered above
+            #get One//wont be id --> covered above
             att1Val = self._attName_id_value[attributeOneName][self.id]
-
+            if convertToTuple:
+                att1Val = tuple(att1Val)
+            
+            #get Two
             if attributeTwoName == 'id':
                 att2Val = self.id
             else:
                 att2Val = self._attName_id_value[attributeTwoName][self.id]
 
+            #update map
             if att1Val in att1_att2:
 
                 if assumeUnique:

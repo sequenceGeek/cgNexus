@@ -18,6 +18,17 @@ def testNX(fN, fF):
     
     NX.save()
 
+def testMap(fN, fF):
+
+    NX = Nexus(fN, fF)
+    NX.load(['geneName', 'numReads', 'otherIDs'])
+
+    geneName_numReads = NX.createMap('otherIDs', 'geneName', False) #not 1to1
+
+    for k,v in geneName_numReads.iteritems():
+        print k, v[:5]
+        return
+    
 def testNXOld(fN, fF):
 
     NX = NexusOld(fN, cgTest)
