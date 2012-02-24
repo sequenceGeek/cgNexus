@@ -1,11 +1,6 @@
-import bioLibCG
+import os, sys
+sys.path.append('/home/chris/cgNexus')
 from cgNexus import Nexus
-from cgNexusFlat import Nexus as NexusOld
-import cgDL
-from cgAutoCast import autocast
-from cgAutoKeyWord import autokey
-from bioLibJA import subit
-from theTable import cgTest
 
 def testNX(fN, fF):
 
@@ -55,10 +50,9 @@ def testFlat(fN, fF):
         ls = line.strip().split('\t')
         a, b, c = ls[1], int(ls[2]), [int(x) for x in ls[3].split(',') if x != '.'] 
     f.close()
-    
+
 if __name__ == "__main__":
     import sys
-    if sys.argv[1] == "help":
-        bioLibCG.gd(sys.argv[0])
-    else:
-        bioLibCG.submitArgs(globals()[sys.argv[1]], sys.argv[1:])
+    assert sys.argv[1] in globals(), "Need name of fxn to run from command line!"
+    fxnToRun = globals()[sys.argv[1]] 
+    fxnToRun(*sys.argv[2:])
