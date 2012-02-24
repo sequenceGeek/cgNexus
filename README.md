@@ -1,67 +1,69 @@
 #cgNexus
 
-Nexus is flat file loader (think tab spaced files) that:
+**Nexus is flat file (text file) loader that:**
 	
- * Easily loads and saves defined file formats
- * Automatically casts values (from flat file) to python types when loaded inside scripts  
- * Automatically assigns attribute names to file columns for speedier development time (think 'geneName' instead of column[5])
- * Eases execution of line independent parallel processes (split file --> compute --> stitch file back together)
- * Does other stuff (e.g., eases the creation of mappings based on file columns)
+ * Easily loads and saves pre-defined tab spaced column files
+ * Automatically casts values (from flat file) to python types on load  
+ * Automatically assigns attribute names to file columns for use in script (think 'geneName' instead of column[5])
+ * Eases execution of line-independent parallel processes (split file --> compute --> stitch file back together)
+ * Does more (e.g., eases the creation of attribute mappings based on file columns)
 
-Advantages:
+**Advantages**
+ 
  * Much faster development time!
 
-Disadvantages (no free lunch :( ):
+**Disadvantages**
+ 
  * slower running time
  * often greater memory usage
 		
 
 ##TODO
-  X 1) make attributes properties for non-[id] access
-        a) this means make internal id tracker
-    2) load everything on init (call it hints)
-		a) This will be optional with (4) implemented
-			i) if used it will boost speed
-		b) Hints will be a single string
-			i) e.g., 'geneName,geneLength'
-  X 3) make format files just a txt file 
-        a) need good way to access them...
-    4) load items as they are needed
-        b) this is complicated cuz going through file every time
-        you need to load something is SLOOOOW? or is it?
-    5) fix the copy issue, should be able to return default w/o copy
-    6) create add/delete row from Nexus
-		a) if an id is added mid loop, will that change generator for while loop?
-    7) Nexus Generator (do not load data into memory, but still cast)
-		a) read only?
-		b) its possible to use the generator to save to ANOTHER FILE while running...
-	8) load without format
-		a) quickFormat('0 geneName string .', '3 partnerIDs intList 1,2,3')
-	9) Simplify Parallel Processing with helper scripts
-		a) using SGE (Sun Grid Engine)
-		b) without SGE
-		c) split/ compute/ stitch using exitSignals(not OS specific)
-	10) check if runs on Windows
-	11) add running from command line script...
-	12) add Errors for common mishaps...
+ 
+ * Make attributes properties for non-[id] access (X)
+   * this means make internal id tracker
+ * Load everything on init (call it hints)
+   * This will be optional with (4) implemented
+     *If used it will boost speed.
+   * Hints will be a single string
+     * e.g., 'geneName,geneLength'
+ * Make format files just a txt file (X) 
+   * need good way to access them...
+ * Load items as they are needed
+   *this is complicated cuz going through file every time you need to load something is SLOOOOW? or is it?
+ * Fix the copy issue, should be able to return default w/o copy
+ * Create add/delete row from NX.
+   * if an id is added mid loop, will that change generator for while loop?
+ * Nexus Generator (do not load data into memory, but still cast it)
+   * read only?
+   * its possible to use the generator to save to ANOTHER FILE while running...
+ * Load without format
+   * quickFormat('0 geneName string .', '3 partnerIDs intList 1,2,3')
+ * Simplify Parallel Processing with helper scripts
+   * using SGE (Sun Grid Engine)
+   * without SGE
+   * split/ compute/ stitch using exitSignals(not OS specific)
+ * Check if runs on Windows
+ * Add running from command line script...
+ * Add Errors for common mishaps...
 
-SPEED
-	-replace split with [:-1]
-	-use str.split as splitIt (no dot)
-    -[possibly switch to regex (NO...much slower...)]
-	-try to get rid of for loops (use comprehension/map)
-	-optimize casting fxns
+##Speed
 
-Documentation
-	1) Show usages for:
-		a) loading/saving a tab file 
-			i) make format file
-			ii) load file/ update item / save file
-		b) using a quick table to load
-		c) add row/delete row
-		d) run simple job in parallel 
-			i) explain that job has to be row-independent
+ * replace split with [:-1]
+ * use str.split as splitIt (no dot)
+ * [possibly switch to regex (NO...much slower...)]
+ * try to get rid of for loops (use comprehension/map)
+ * optimize casting fxns
 
-Development:
-	1) Use Trello?
+##Documentation
+
+ * Show usages for:
+   * Loading/saving a tab file 
+     * Make format file
+     * Load file/ update item / save file
+    * Using a quick table to load
+    * Add row/delete row
+    * Run simple job in parallel 
+      * Explain that job has to be row-independent
+
 
