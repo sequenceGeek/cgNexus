@@ -36,7 +36,7 @@ def shellNexus(NX, dataFileName, select):
 
 class Nexus:
 
-    def __init__(self, dataFileName, dataFormatFN, paraInfo = [None, None], ids = True):
+    def __init__(self, dataFileName, dataFormatFN, loadHints = '', paraInfo = [None, None], ids = True):
         self._dataFileName = dataFileName
         self._dataFormatFN = dataFormatFN
         self._attName__formatInfo = {} # name: (position, type, default)
@@ -56,8 +56,11 @@ class Nexus:
         self.initializePacketInfo(paraInfo)
         self.numSlots = self.getNumberOfSlots()
         self.loadTranscriptionInfo() #will do both format loading/casting fxn loading
-        self.initializeMasterDict() #will initialize ALL attributes (not just selected ones)TODO! CHECK SAVE!
+        self.initializeMasterDict() #will initialize ALL attributes (not just selected ones)
 
+        #do an initial load if specified...hints will speed up load due to file only being read once
+        if loadHints:
+            self.load(loadHints.split(','))
         
 
     def __getattr__(self, name):
@@ -173,6 +176,8 @@ class Nexus:
     def load(self, attNames):
         '''load attributes specified into nexus master dictionary.  Should be callable multiple times
         during Nexus lifetime'''
+
+        print 'loading', attNames
 
         #update selected attribute names
         [self._selectedAttNames.append(x) for x in attNames if x not in self._selectedAttNames]		
