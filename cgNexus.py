@@ -5,6 +5,10 @@ import cgFile
 def lineUpdate(lineData, data, position):
     '''lineList must NOT contain CR.  data must be string'''
     numSlots = len(lineData) #should be same every time...just pass as argument
+    #TODO: numSlots HERE refers to num Columns in ongoing line creation... check other branch for confusions
+    #TODO: can update lineData once before saving all data to get rid of the len calculation
+    #TODO: can also pass all new data at same time to cut down # of fxn calls
+    
 
     #put data in right position
     if position < numSlots:
@@ -24,8 +28,6 @@ def shellNexus(NX, dataFileName, select):
     newNX._attName_id_value = {}
     newNX._selectedAttNames = select
     newNX.loadTranscriptionInfo(select)
-    newNX._rangeSpecified = copy(NX._rangeSpecified)
-    newNX._selectedIDs = set()
     newNX._packetInfo = copy(NX._packetInfo)
     newNX._splitRunFlag = copy(NX._splitRunFlag)
     newNX.hasIDs = NX.hasIDs
@@ -34,7 +36,7 @@ def shellNexus(NX, dataFileName, select):
 
 class Nexus:
 
-    def __init__(self, dataFileName, dataFormatFN, ids = True):
+    def __init__(self, dataFileName, dataFormatFN, paraInfo = [None, None], ids = True):
         self._dataFileName = dataFileName
         self._dataFormatFN = dataFormatFN
         self._attName__formatInfo = {} # name: (position, type, default)
@@ -44,14 +46,20 @@ class Nexus:
         self._attName_columnPosition = {}
         self._attName_defaultValue = {}
         self._selectedAttNames = []
-        self._rangeSpecified = []
-        self._selectedIDs = set()
         self._packetInfo = None
         self._splitRunFlag = False
         self._iterIDGen = None
         self.id = 0 #have to init to packet starting id
         self.hasIDs = ids
-       
+        
+        #initialize Nexus
+        self.initializePacketInfo(paraInfo)
+        self.numSlots = self.getNumberOfSlots()
+        self.loadTranscriptionInfo() #will do both format loading/casting fxn loading
+        self.initializeMasterDict() #will initialize ALL attributes (not just selected ones)TODO! CHECK SAVE!
+
+        
+
     def __getattr__(self, name):
         '''this will only work for attributes that arent defined
         note: try/except faster than if/else'''
@@ -119,13 +127,13 @@ class Nexus:
             self._attName__formatInfo[attName] = (i + 1, type, defValue) 
         f.close()
             
-    def loadTranscriptionInfo(self, attNames):
-        '''loads caste fxns, column positions, default values for each selected attribute'''		
+    def loadTranscriptionInfo(self):
+        '''loads caste fxns, column positions, default values for each ALL attributes in format file'''		
 
         if not self._attName__formatInfo:
             self.loadFormatInfo()
 
-        for attName in attNames:
+        for attName in self._attName__formatInfo:
             dataSlot, dataType, dataDefault = self._attName__formatInfo[attName]
             self._attName_casteFromFxn[attName] = cgLuckyCharms.getCasteFunction(dataType, True)
             self._attName_casteToFxn[attName] = cgLuckyCharms.getCasteFunction(dataType, False)
@@ -134,7 +142,7 @@ class Nexus:
 
     def initializeMasterDict(self):
         #initialize master dict
-        for attName in self._selectedAttNames:
+        for attName in self._attName__formatInfo:
             self._attName_id_value[attName] = {}
 
     def getNumberOfSlots(self):
@@ -149,36 +157,31 @@ class Nexus:
     def linkIDsToColumn(self):
         self.ids = self._attName_id_value[self._selectedAttNames[0]]
 
-    def load(self, attNames, paraInfo = [None, None]):
-        '''paraInfo is [runNumber, numberOfRuns]'''
+    def initializePacketInfo(self, paraInfo):
 
+        #for split runs 
         if paraInfo == ['splitRun', 'splitRun']:
             self._splitRunFlag = True
             paraInfo = [None, None] # now treat paraInfo as if there was nothing...
-        
+       
+        #for normal runs
         if paraInfo != [None, None]: 
             paraInfo[0] = int(paraInfo[0])
             paraInfo[1] = int(paraInfo[1])
             self._packetInfo = cgFile.getPacketInfo(self._dataFileName, paraInfo[1])[paraInfo[0] - 1]
-                
-        #if running parallel or specific range, mark range info
-        self._selectedAttNames = attNames		
-        
-        #get casting and column info
-        self.loadTranscriptionInfo(attNames)
 
-        #init master dictionaries
-        self.initializeMasterDict()
+    def load(self, attNames):
+        '''load attributes specified into nexus master dictionary.  Should be callable multiple times
+        during Nexus lifetime'''
 
-        #get number of slots
-        numSlots = self.getNumberOfSlots()
-        
+        #update selected attribute names
+        [self._selectedAttNames.append(x) for x in attNames if x not in self._selectedAttNames]		
+
         #open file and binary skip to correct line if packet            
         dataFile = cgFile.cgFile(self._dataFileName)
         if self._packetInfo:
             dataFile.seekToLineStart(self._packetInfo[0])
 
-        #print 'before loop', t.split()
         #transcribe values
         currentID = 0
         for line in dataFile.file:
@@ -191,7 +194,7 @@ class Nexus:
             else:
                 id = currentID
                 currentID += 1
-    
+   
             #stop if at end of range
             if self._packetInfo:
                 if id == self._packetInfo[1]:
@@ -204,7 +207,7 @@ class Nexus:
             #make new fxn that will just return a copy...faster
             for attName in attNames:
                 colPosition = self._attName_columnPosition[attName]
-                if colPosition < numSlots:
+                if colPosition < self.numSlots:
                     if ls[colPosition] != '.':
                         self._attName_id_value[attName][id] = self._attName_casteFromFxn[attName](ls[colPosition])
                     else:
@@ -215,6 +218,12 @@ class Nexus:
         dataFile.file.close()
         
         #bind id attribute to first attribute, they all have the same ids...
+        #TODO How are you going to while nextID without the ids being linked to anything?
+        #if you require loading of one attribute ok....else have to load id on init...
+        #Either way this needs to go in init
+        # What if you just grab the 1st ID in the file....then when going through the "for" loop it will
+        # load the rest of the ids?
+        # Need to switch Nexus to id_attName_value NOT _attName_id_value...obsolete now with setattr/getattr
         self.linkIDsToColumn()
         self.id = self.ids.iterkeys().next()
 
@@ -225,7 +234,6 @@ class Nexus:
         if self._packetInfo:
             outFN += '.range.%s.%s' % (self._packetInfo[0], self._packetInfo[1]) 
 
-        
         dataFile = cgFile.cgFile(self._dataFileName)
         if self._packetInfo:
             dataFile.seekToLineStart(self._packetInfo[0])
@@ -235,7 +243,8 @@ class Nexus:
         newLines = []
         for line in dataFile.file:
             ls = line.strip().split('\t')
-            
+           
+            #id = int(ls[0]) if self.hasIDs else currentID
             if self.hasIDs:
                 id = int(ls[0])
             else:
@@ -247,6 +256,9 @@ class Nexus:
 
             #save the rest
             #TODO: lineUpdate with multiple injections
+            #REPLACE FOR LOOP BELOW WITH once lineupdate fxn is upgraded:
+            #colPos__vals = [(self._attName_columnPosition[x], self._attName_casteToFxn[x](self._attName_id_value[x][id])) for x in self.selectedAttNames]
+            #ls = lineUpdate(ls, colPos__vals)
             for attName in self._selectedAttNames:
                 newVal = self._attName_casteToFxn[attName](self._attName_id_value[attName][id])
                 ls = lineUpdate(ls, newVal, self._attName_columnPosition[attName])
