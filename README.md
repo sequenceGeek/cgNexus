@@ -15,14 +15,13 @@
 **Disadvantages**
  
  * slower running time
- * often greater memory usage
 		
 
 ##TODO
  
  * Make attributes properties for non-[id] access (X)
    * this means make internal id tracker
- * Load everything on init (call it hints)
+ * Load everything on init (call it hints) (X)
    * This will be optional with (4) implemented
      *If used it will boost speed.
    * Hints will be a single string
