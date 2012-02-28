@@ -5,19 +5,20 @@ import cgFile
 def lineUpdate(lineData, colPos__newVal):
     '''lineList must NOT contain CR.  data must be string'''
     #TODO: numSlots HERE refers to num Columns in ongoing line creation... check other branch for confusions
-    #TODO: can update lineData once before saving all data to get rid of the len calculation, just keep track of max slot position on load
+    #TODO: can update lineData once before saving all data to get rid of the len calculation
     #TODO: can also pass all new data at same time to cut down # of fxn calls
     numCurrentSlots = len(lineData) #should be same every time...just pass as argument
     
-    #add '.' here for maximum columnVal
-    maxPos = max([x[0] for x in colPos__newVal])
-    for i in range(numCurrentSlots, maxPos + 1):
-        lineData.append('.')
-    
-    #add new data to each line
     for colPos, newVal in colPos__newVal:
+
         #put data in right position
-        lineData[colPos] = newVal 
+        if colPos < numCurrentSlots:
+            lineData[colPos] = newVal 
+        else:
+            #update lines that don't exist/have no values
+            for i in range(numCurrentSlots, colPos):
+                lineData.append('.')
+            lineData.append(newVal)
     
     return lineData
 
@@ -260,8 +261,6 @@ class Nexus:
                 if id == self._packetInfo[1]: break
 
             #save the rest
-            #TODO: lineUpdate with multiple injections
-            #REPLACE FOR LOOP BELOW WITH once lineupdate fxn is upgraded:
             colPos__vals = [(self._attName_columnPosition[x], self._attName_casteToFxn[x](self._attName_id_value[x][id])) for x in self._selectedAttNames]
             ls = lineUpdate(ls, colPos__vals)
 
