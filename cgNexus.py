@@ -4,9 +4,6 @@ import cgFile
 
 def lineUpdate(lineData, colPos__newVal):
     '''lineList must NOT contain CR.  data must be string'''
-    #TODO: numSlots HERE refers to num Columns in ongoing line creation... check other branch for confusions
-    #TODO: can update lineData once before saving all data to get rid of the len calculation
-    #TODO: can also pass all new data at same time to cut down # of fxn calls
     numCurrentSlots = len(lineData) #should be same every time...just pass as argument
     
     for colPos, newVal in colPos__newVal:
