@@ -2,22 +2,22 @@ import cgLuckyCharmsFlat as cgLuckyCharms
 from copy import copy
 import cgFile
 
-def lineUpdate(lineData, data, position):
+def lineUpdate(lineData, colPos__newVal):
     '''lineList must NOT contain CR.  data must be string'''
-    numSlots = len(lineData) #should be same every time...just pass as argument
     #TODO: numSlots HERE refers to num Columns in ongoing line creation... check other branch for confusions
-    #TODO: can update lineData once before saving all data to get rid of the len calculation
+    #TODO: can update lineData once before saving all data to get rid of the len calculation, just keep track of max slot position on load
     #TODO: can also pass all new data at same time to cut down # of fxn calls
+    numCurrentSlots = len(lineData) #should be same every time...just pass as argument
     
-
-    #put data in right position
-    if position < numSlots:
-        lineData[position] = data
-    else:
-        #update lines that don't exist/have no values
-        for i in range(numSlots, position):
-            lineData.append('.')
-        lineData.append(data)
+    #add '.' here for maximum columnVal
+    maxPos = max([x[0] for x in colPos__newVal])
+    for i in range(numCurrentSlots, maxPos + 1):
+        lineData.append('.')
+    
+    #add new data to each line
+    for colPos, newVal in colPos__newVal:
+        #put data in right position
+        lineData[colPos] = newVal 
     
     return lineData
 
@@ -262,11 +262,8 @@ class Nexus:
             #save the rest
             #TODO: lineUpdate with multiple injections
             #REPLACE FOR LOOP BELOW WITH once lineupdate fxn is upgraded:
-            #colPos__vals = [(self._attName_columnPosition[x], self._attName_casteToFxn[x](self._attName_id_value[x][id])) for x in self.selectedAttNames]
-            #ls = lineUpdate(ls, colPos__vals)
-            for attName in self._selectedAttNames:
-                newVal = self._attName_casteToFxn[attName](self._attName_id_value[attName][id])
-                ls = lineUpdate(ls, newVal, self._attName_columnPosition[attName])
+            colPos__vals = [(self._attName_columnPosition[x], self._attName_casteToFxn[x](self._attName_id_value[x][id])) for x in self._selectedAttNames]
+            ls = lineUpdate(ls, colPos__vals)
 
             #only one newLine no matter the amount of attributes updated	
             newLines.append('%s\n' % '\t'.join(ls))
