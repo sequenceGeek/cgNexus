@@ -13,6 +13,18 @@ def testNX(fN, fF):
     
     NX.save()
 
+
+def testAutoLoad(fN, ff):
+
+    NX = Nexus(fN, ff, 'geneName')
+
+    print 'START LOOPING'
+    while NX.nextID():
+
+        NX.isCoding = True
+        print NX.isCoding # = False
+        return
+
 def testMap(fN, fF):
 
     NX = Nexus(fN, fF)

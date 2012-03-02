@@ -24,7 +24,7 @@ def shellNexus(NX, dataFileName, select):
 
     newNX = Nexus(dataFileName, NX._dataFormatFN, NX.hasIDs)
     newNX._attName_id_value = {}
-    newNX._selectedAttNames = select
+    newNX._loadedAttNames = select
     newNX.loadTranscriptionInfo(select)
     newNX._packetInfo = copy(NX._packetInfo)
     newNX._splitRunFlag = copy(NX._splitRunFlag)
@@ -43,55 +43,70 @@ class Nexus:
         self._attName_casteToFxn = {}
         self._attName_columnPosition = {}
         self._attName_defaultValue = {}
-        self._selectedAttNames = []
+        self._loadedAttNames = []
         self._packetInfo = None
         self._splitRunFlag = False
         self._iterIDGen = None
+        self._ids = None
         self.id = 0 #have to init to packet starting id
         self.hasIDs = ids
         
         #initialize Nexus
         self.initializePacketInfo(paraInfo)
         self.numSlots = self.getNumberOfSlots()
+        self.loadFormatInfo()
         self.loadTranscriptionInfo() #will do both format loading/casting fxn loading
-        self.initializeMasterDict() #will initialize ALL attributes (not just selected ones)
 
-        #do an initial load if specified...hints will speed up load due to file only being read once
+        #used for get/set efficiency
+        self._initialzed = True
+        
+        #initial load if specified 
         if loadHints:
             self.load(loadHints.split(','))
-        
+
 
     def __getattr__(self, name):
         '''this will only work for attributes that arent defined
         note: try/except faster than if/else'''
-        print 'getting', name
+        #print 'getting', name
         try:
             return self._attName_id_value[name][self.id]
         except KeyError:
             #first load attribute
             if name in self._attName__formatInfo: #name in text table?
                 self.load([name])
+                return self._attName_id_value[name][self.id]
+            else:
+                raise NameError("Cannot get Attribute: it is not in text table")
 
-            #now return requested value
-            return self._attName_id_value[name][self.id]
         
     def __setattr__(self, name, value):
         '''this will set EVERYTHING if possible
         note try/except was faster than if/else'''
         #NOTE TRY SPEED FOR __dict__
-        print 'setting', name 
+        #TODO is this slowing down id scrolling?
+        #print 'setting', name 
         try:
             self.__dict__['_attName_id_value'][name][self.id] = value
         except KeyError:
-            if ('_attName__formatInfo' in self.__dict__) and ('_selectedAttNames' in self.__dict__):
-                if (name in self.__dict__['_attName__formatInfo']) and (name not in self._selectedAttNames):
-                    raise NameError("You need to specify the variable you are saving in hints!")
+            #print '..NON DATA ATTRIBUTE'
 
+            # check if attribute needs loading (error if trying to load attribute that isnt in format table)
+            #TODO no way of knowing if accidentally setting property that is not in table...
+            #may make all private variables _X and if it isnt private and isnt in format file....raise error
+            if '_initialzed' in self.__dict__:
+                if (name in self.__dict__['_attName__formatInfo']) and (name not in self._loadedAttNames):
+                    self.load([name])
+                    self.__dict__['_attName_id_value'][name][self.id] = value
+                    return
+            
+            # set "normal" object property
+            #print '....setting normal prop', name
             self.__dict__[name] = value
 
     def __str__(self):
         newLines = []
-        for id in self.ids:
+        for id in self._ids:
             newLine = [str(id)]
             
             for attName in self._attName_id_value:
@@ -112,7 +127,7 @@ class Nexus:
                 self._iterIDGen = None
                 return False
         else:
-            self._iterIDGen = self.ids.iterkeys()
+            self._iterIDGen = self._ids.iterkeys()
             self.id = self._iterIDGen.next()
             return True
        
@@ -141,9 +156,6 @@ class Nexus:
     def loadTranscriptionInfo(self):
         '''loads caste fxns, column positions, default values for each ALL attributes in format file'''		
 
-        if not self._attName__formatInfo:
-            self.loadFormatInfo()
-
         for attName in self._attName__formatInfo:
             dataSlot, dataType, dataDefault = self._attName__formatInfo[attName]
             self._attName_casteFromFxn[attName] = cgLuckyCharms.getCasteFunction(dataType, True)
@@ -151,9 +163,9 @@ class Nexus:
             self._attName_columnPosition[attName] = dataSlot
             self._attName_defaultValue[attName] = dataDefault
 
-    def initializeMasterDict(self):
+    def updateMasterDict(self, attNames):
         #initialize master dict
-        for attName in self._attName__formatInfo:
+        for attName in attNames:
             self._attName_id_value[attName] = {}
 
     def getNumberOfSlots(self):
@@ -166,7 +178,7 @@ class Nexus:
             return 0
 
     def linkIDsToColumn(self):
-        self.ids = self._attName_id_value[self._selectedAttNames[0]]
+        self._ids = self._attName_id_value[self._loadedAttNames[0]]
 
     def initializePacketInfo(self, paraInfo):
 
@@ -188,7 +200,10 @@ class Nexus:
         print 'loading', attNames
 
         #update selected attribute names
-        [self._selectedAttNames.append(x) for x in attNames if x not in self._selectedAttNames]		
+        [self._loadedAttNames.append(x) for x in attNames if x not in self._loadedAttNames]		
+
+        #make entry in master dictionary
+        [self.updateMasterDict([x]) for x in attNames if x not in self._attName_id_value]
 
         #open file and binary skip to correct line if packet            
         dataFile = cgFile.cgFile(self._dataFileName)
@@ -240,7 +255,7 @@ class Nexus:
         # load the rest of the ids?
         # Need to switch Nexus to id_attName_value NOT _attName_id_value...obsolete now with setattr/getattr
         self.linkIDsToColumn()
-        self.id = self.ids.iterkeys().next()
+        self.id = self._ids.iterkeys().next()
 
     def save(self, outFN = None):
             
@@ -270,7 +285,7 @@ class Nexus:
                 if id == self._packetInfo[1]: break
 
             #save the rest
-            colPos__vals = [(self._attName_columnPosition[x], self._attName_casteToFxn[x](self._attName_id_value[x][id])) for x in self._selectedAttNames]
+            colPos__vals = [(self._attName_columnPosition[x], self._attName_casteToFxn[x](self._attName_id_value[x][id])) for x in self._loadedAttNames]
             ls = lineUpdate(ls, colPos__vals)
 
             #only one newLine no matter the amount of attributes updated	
