@@ -64,12 +64,22 @@ class Nexus:
     def __getattr__(self, name):
         '''this will only work for attributes that arent defined
         note: try/except faster than if/else'''
-        return self._attName_id_value[name][self.id]
+        print 'getting', name
+        try:
+            return self._attName_id_value[name][self.id]
+        except KeyError:
+            #first load attribute
+            if name in self._attName__formatInfo: #name in text table?
+                self.load([name])
+
+            #now return requested value
+            return self._attName_id_value[name][self.id]
         
     def __setattr__(self, name, value):
         '''this will set EVERYTHING if possible
         note try/except was faster than if/else'''
         #NOTE TRY SPEED FOR __dict__
+        print 'setting', name 
         try:
             self.__dict__['_attName_id_value'][name][self.id] = value
         except KeyError:

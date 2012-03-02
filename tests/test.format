@@ -1,3 +1,4 @@
 geneName	string	.
 numReads	int	0
 otherIDs	intList	.
+isCoding	bool	F
