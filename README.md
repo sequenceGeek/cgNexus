@@ -30,7 +30,8 @@
    * need good way to access them...
  * Load items as they are needed
    *this is complicated cuz going through file every time you need to load something is SLOOOOW? or is it?
- * Fix the copy issue, should be able to return default w/o copy
+ * Fix the copy issue, should be able to return default w/o copy (X)
+    * use list[:] instead of copy...much faster (also faster than list(list)) 
  * Create add/delete row from NX.
    * if an id is added mid loop, will that change generator for while loop?
  * Nexus Generator (do not load data into memory, but still cast it)

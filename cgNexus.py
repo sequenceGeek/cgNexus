@@ -213,10 +213,12 @@ class Nexus:
                 if colPosition < self.numSlots:
                     if ls[colPosition] != '.':
                         self._attName_id_value[attName][id] = self._attName_casteFromFxn[attName](ls[colPosition])
+                    elif 'List' in self._attName__formatInfo[attName][1]: #change "in" to ==[-4:]?
+                        self._attName_id_value[attName][id] = self._attName_defaultValue[attName][:]
                     else:
                         self._attName_id_value[attName][id] = copy(self._attName_defaultValue[attName])
                 else:
-                    self._attName_id_value[attName][id] = copy(self._attName_defaultValue[attName])
+                    self._attName_id_value[attName][id] = self._attName_defaultValue[attName] #no need for copy on primitive types
 
         dataFile.file.close()
         
