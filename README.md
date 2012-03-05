@@ -28,7 +28,7 @@
      * e.g., 'geneName,geneLength'
  * Make format files just a txt file (X) 
    * need good way to access them...
- * Load items as they are needed
+ * Load items as they are needed (X)
    *this is complicated cuz going through file every time you need to load something is SLOOOOW? or is it?
  * Fix the copy issue, should be able to return default w/o copy (X)
     * use list[:] instead of copy...much faster (also faster than list(list)) 

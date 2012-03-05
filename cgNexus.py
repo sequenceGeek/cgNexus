@@ -48,27 +48,30 @@ class Nexus:
         self._splitRunFlag = False
         self._iterIDGen = None
         self._ids = None
-        self.id = 0 #have to init to packet starting id
+        self.id = None #have to init to packet starting id
         self.hasIDs = ids
         
         #initialize Nexus
+        #TODO optional initialization of ids if there are hints...
+        #may be able to just load "first ID in file and when it loops through it will load the rest?"
         self.initializePacketInfo(paraInfo)
+        self._initializeIDs()
+        self.id = (x for x in self._ids).next()
         self.numSlots = self.getNumberOfSlots()
         self.loadFormatInfo()
-        self.loadTranscriptionInfo() #will do both format loading/casting fxn loading
+        self.loadTranscriptionInfo() #loading/casting fxn loading
 
         #used for get/set efficiency
         self._initialzed = True
         
         #initial load if specified 
         if loadHints:
-            self.load(loadHints.split(','))
+            self.load(loadHints.split(' '))
 
 
     def __getattr__(self, name):
         '''this will only work for attributes that arent defined
         note: try/except faster than if/else'''
-        #print 'getting', name
         try:
             return self._attName_id_value[name][self.id]
         except KeyError:
@@ -115,7 +118,12 @@ class Nexus:
 
         return '\n'.join(newLines)
 
-    def goToFirstID(self):
+    def _initializeIDs(self):
+        
+        with open(self._dataFileName, 'r') as f:
+            self._ids = set(int(x.split('\t')[0]) for x in f)
+
+    def resetLoop(self):
         self._iterIDGen = None
 
     def nextID(self):
@@ -127,7 +135,7 @@ class Nexus:
                 self._iterIDGen = None
                 return False
         else:
-            self._iterIDGen = self._ids.iterkeys()
+            self._iterIDGen = (x for x in self._ids)
             self.id = self._iterIDGen.next()
             return True
        
@@ -197,7 +205,7 @@ class Nexus:
         '''load attributes specified into nexus master dictionary.  Should be callable multiple times
         during Nexus lifetime'''
 
-        print 'loading', attNames
+        #print 'loading', attNames
 
         #update selected attribute names
         [self._loadedAttNames.append(x) for x in attNames if x not in self._loadedAttNames]		
@@ -247,16 +255,6 @@ class Nexus:
 
         dataFile.file.close()
         
-        #bind id attribute to first attribute, they all have the same ids...
-        #TODO How are you going to while nextID without the ids being linked to anything?
-        #if you require loading of one attribute ok....else have to load id on init...
-        #Either way this needs to go in init
-        # What if you just grab the 1st ID in the file....then when going through the "for" loop it will
-        # load the rest of the ids?
-        # Need to switch Nexus to id_attName_value NOT _attName_id_value...obsolete now with setattr/getattr
-        self.linkIDsToColumn()
-        self.id = self._ids.iterkeys().next()
-
     def save(self, outFN = None):
             
         if outFN == None: outFN = self._dataFileName

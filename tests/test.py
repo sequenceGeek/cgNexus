@@ -1,29 +1,36 @@
 import os, sys
 sys.path.append('/home/chris/cgNexus')
+sys.path.append('/home/chris/projects/cgNexus')
 from cgNexus import Nexus
 
 def testNX(fN, fF):
 
-    NX = Nexus(fN, fF)
-    NX.load(['geneName', 'numReads', 'otherIDs'])
+    NX = Nexus(fN, fF, 'geneName numReads isCoding otherIDs')
 
-    for id in NX.ids:
-        NX.id = id
-        NX.geneName = 'CHANGE'
+    print 'START LOOPING'
+    while NX.nextID(): 
+
+        NX.isCoding = True
+        NX.otherIDs = range(10)
+        NX.geneName = "testAuto"
+        NX.numReads = 300
     
     NX.save()
 
 
 def testAutoLoad(fN, ff):
 
-    NX = Nexus(fN, ff, 'geneName')
+    NX = Nexus(fN, ff)
 
     print 'START LOOPING'
     while NX.nextID():
 
         NX.isCoding = True
-        print NX.isCoding # = False
-        return
+        NX.otherIDs = range(10)
+        NX.geneName = "testAuto"
+        NX.numReads = 300
+
+    NX.save()
 
 def testMap(fN, fF):
 
