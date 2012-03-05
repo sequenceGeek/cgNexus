@@ -143,23 +143,38 @@ class Nexus:
         '''from column format file, get positions and such
         0 is always the id so start from 1'''
 
-        f = open(self._dataFormatFN, 'r')
-        for i, line in enumerate(f):
+        #handle quickFormat
+        if type(self._dataFormatFN) == type([]):
+            for formatLine in self._dataFormatFN:
+                colNum, attName, theType, defValue = formatLine.strip().split(' ')
+                colNum = int(colNum)
+            
+                #check for empty lists:
+                if 'List' in theType and defValue == '.':
+                    defValue = list()
+                else:
+                    defValue = cgLuckyCharms.getCasteFunction(theType)(defValue)
 
-            #blank line means skipped data
-            if line.strip() == '': continue 
+                self._attName__formatInfo[attName] = (colNum, theType, defValue) 
+        #handle file
+        else:
+            f = open(self._dataFormatFN, 'r')
+            for i, line in enumerate(f):
 
-            #get formatting info
-            attName, type, defValue = line.strip().split('\t')
+                #blank line means skipped data
+                if line.strip() == '': continue 
 
-            #check for empty lists:
-            if 'List' in type and defValue == '.':
-                defValue = list()
-            else:
-                defValue = cgLuckyCharms.getCasteFunction(type)(defValue)
+                #get formatting info
+                attName, theType, defValue = line.strip().split('\t')
 
-            self._attName__formatInfo[attName] = (i + 1, type, defValue) 
-        f.close()
+                #check for empty lists:
+                if 'List' in theType and defValue == '.':
+                    defValue = list()
+                else:
+                    defValue = cgLuckyCharms.getCasteFunction(theType)(defValue)
+
+                self._attName__formatInfo[attName] = (i + 1, theType, defValue) 
+            f.close()
             
     def loadTranscriptionInfo(self):
         '''loads caste fxns, column positions, default values for each ALL attributes in format file'''		

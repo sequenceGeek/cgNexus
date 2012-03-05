@@ -37,7 +37,7 @@
  * Nexus Generator (do not load data into memory, but still cast it)
    * read only?
    * its possible to use the generator to save to ANOTHER FILE while running...
- * Load without format
+ * Load without format (X)
    * quickFormat('0 geneName string .', '3 partnerIDs intList 1,2,3')
  * Simplify Parallel Processing with helper scripts
    * using SGE (Sun Grid Engine)

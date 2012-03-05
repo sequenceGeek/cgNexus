@@ -32,6 +32,22 @@ def testAutoLoad(fN, ff):
 
     NX.save()
 
+def testQuickLoad(fN):
+
+    ff = ['1 geneName string .',
+          '3 otherIDs intList .',
+          '4 isCoding bool F'
+         ]
+    NX = Nexus(fN, ff)
+
+    while NX.nextID():
+
+        NX.isCoding = True
+        NX.otherIDs = range(18)
+        NX.geneName = "testAuto"
+        
+    NX.save()
+
 def testMap(fN, fF):
 
     NX = Nexus(fN, fF)
