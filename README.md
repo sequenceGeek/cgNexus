@@ -34,6 +34,7 @@
     * use list[:] instead of copy...much faster (also faster than list(list)) 
  * Create add/delete row from NX.
    * if an id is added mid loop, will that change generator for while loop?
+ * Add/Delete Formatting columns (column varname type defVal)
  * Nexus Generator (do not load data into memory, but still cast it)
    * read only?
    * its possible to use the generator to save to ANOTHER FILE while running...

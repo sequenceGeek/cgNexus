@@ -1,6 +1,7 @@
 import cgLuckyCharmsFlat as cgLuckyCharms
 from copy import copy
 import cgFile
+import os
 
 def lineUpdate(lineData, colPos__newVal):
     '''lineList must NOT contain CR.  data must be string'''
@@ -48,7 +49,9 @@ class Nexus:
         self._splitRunFlag = False
         self._iterIDGen = None
         self._ids = None
+        self._addedIDs = set()
         self.id = None #have to init to packet starting id
+        self._maxID = None #used for row addition
         self.hasIDs = ids
         
         #initialize Nexus
@@ -56,7 +59,6 @@ class Nexus:
         #may be able to just load "first ID in file and when it loops through it will load the rest?"
         self.initializePacketInfo(paraInfo)
         self._initializeIDs()
-        self.id = (x for x in self._ids).next()
         self.numSlots = self.getNumberOfSlots()
         self.loadFormatInfo()
         self.loadTranscriptionInfo() #loading/casting fxn loading
@@ -118,10 +120,43 @@ class Nexus:
 
         return '\n'.join(newLines)
 
+
+    def addRow(self):
+        '''fill NEW row with default values for loaded attributes
+        TODO what about if you load twice and row only adds previous attributes?
+        If you save it wont matter, but I think for loading '''
+
+        newID = self._maxID + 1
+        for attName in self._loadedAttNames:
+            if 'List' in self._attName__formatInfo[attName][1]: #change "in" to ==[-4:]?
+                self._attName_id_value[attName][newID] = self._attName_defaultValue[attName][:]
+            else:
+                self._attName_id_value[attName][newID] = self._attName_defaultValue[attName]
+
+        self.id = newID
+        self._addedIDs.add(newID)
+        self._ids.add(newID)
+        self._maxID += 1
+        print self._attName_id_value
+
+
     def _initializeIDs(self):
         
-        with open(self._dataFileName, 'r') as f:
-            self._ids = set(int(x.split('\t')[0]) for x in f)
+        try: 
+            with open(self._dataFileName, 'r') as f:
+                self._ids = set(int(x.split('\t')[0]) for x in f)
+        except IOError:
+            self._ids = set()
+       
+        try:
+            self.id = (x for x in self._ids).next()
+        except StopIteration:
+            self.id = 0
+
+        try:
+            self._maxID = max(self._ids)
+        except ValueError:
+            self._maxID = 0
 
     def resetLoop(self):
         self._iterIDGen = None
@@ -220,7 +255,7 @@ class Nexus:
         '''load attributes specified into nexus master dictionary.  Should be callable multiple times
         during Nexus lifetime'''
 
-        #print 'loading', attNames
+        print 'loading', attNames
 
         #update selected attribute names
         [self._loadedAttNames.append(x) for x in attNames if x not in self._loadedAttNames]		
@@ -228,8 +263,20 @@ class Nexus:
         #make entry in master dictionary
         [self.updateMasterDict([x]) for x in attNames if x not in self._attName_id_value]
 
+        #load defaults for ids that are NOT in the file
+        #TODO what if load/save multiple times?
+        for addedID in self._addedIDs:
+            for attName in attNames:
+                if 'List' in self._attName__formatInfo[attName][1]: #change "in" to ==[-4:]?
+                    self._attName_id_value[attName][addedID] = self._attName_defaultValue[attName][:]
+                else:
+                    self._attName_id_value[attName][addedID] = self._attName_defaultValue[attName]
+        
         #open file and binary skip to correct line if packet            
-        dataFile = cgFile.cgFile(self._dataFileName)
+        if not os.path.exists(self._dataFileName):
+            return 
+        else:
+            dataFile = cgFile.cgFile(self._dataFileName)
         if self._packetInfo:
             dataFile.seekToLineStart(self._packetInfo[0])
 
@@ -265,10 +312,13 @@ class Nexus:
                         self._attName_id_value[attName][id] = self._attName_defaultValue[attName][:]
                     else:
                         self._attName_id_value[attName][id] = copy(self._attName_defaultValue[attName])
+                #TODO check if this else is supposed to contain List and normal type...
                 else:
                     self._attName_id_value[attName][id] = self._attName_defaultValue[attName] #no need for copy on primitive types
 
         dataFile.file.close()
+
+
         
     def save(self, outFN = None):
             

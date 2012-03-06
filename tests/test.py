@@ -32,6 +32,18 @@ def testAutoLoad(fN, ff):
 
     NX.save()
 
+def testRowAdd(fN, ff):
+
+    NX = Nexus(fN, ff)
+
+    for i in range(20):
+        NX.addRow()
+        print NX.id
+        NX.geneName = "even" if i%2 else "odd"
+        NX.otherIDs = [7,8,9]
+
+    print NX
+
 def testQuickLoad(fN):
 
     ff = ['1 geneName string .',
