@@ -5,7 +5,7 @@
  * Easily loads and saves pre-defined tab spaced column files
  * Automatically casts values (from flat file) to python types on load  
  * Automatically assigns attribute names to file columns for use in script (think 'geneName' instead of column[5])
- * Eases execution of line-independent parallel processes (split file --> compute --> stitch file back together)
+ * Eases execution of MapReducing files (split file --> compute --> stitch file back together)
  * Does more (e.g., eases the creation of attribute mappings based on file columns)
 
 **Advantages**
@@ -39,7 +39,7 @@
    * its possible to use the generator to save to ANOTHER FILE while running...
  * Load without format (X)
    * quickFormat('0 geneName string .', '3 partnerIDs intList 1,2,3')
- * Simplify Parallel Processing with helper scripts
+ * Simplify Map Reduce with helper scripts
    * using SGE (Sun Grid Engine)
    * without SGE
    * split/ compute/ stitch using exitSignals(not OS specific)
