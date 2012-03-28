@@ -1,6 +1,9 @@
+import os
+
 import cgLuckyCharmsFlat as cgLuckyCharms
 from copy import copy
 import cgFile
+
 
 def lineUpdate(lineData, data, position):
     '''lineList must NOT contain CR.  data must be string'''
@@ -219,8 +222,10 @@ class Nexus:
         self.id = self.ids.iterkeys().next()
 
     def save(self, outFN = None):
+        '''save updated internal representation of data to temp and then rename to final file name'''
             
         if outFN == None: outFN = self._dataFileName
+        tempFN = outFN + "_temp"
 
         if self._packetInfo:
             outFN += '.range.%s.%s' % (self._packetInfo[0], self._packetInfo[1]) 
@@ -233,6 +238,7 @@ class Nexus:
         #create new file contents
         currentID = 0
         newLines = []
+        fOut = open(tempFN, 'w')
         for line in dataFile.file:
             ls = line.strip().split('\t')
             
@@ -252,14 +258,12 @@ class Nexus:
                 ls = lineUpdate(ls, newVal, self._attName_columnPosition[attName])
 
             #only one newLine no matter the amount of attributes updated	
-            newLines.append('%s\n' % '\t'.join(ls))
+            fOut.write('%s\n' % '\t'.join(ls))
         dataFile.file.close()
+        fOut.close()
 
-        #output file
-        newLines = ''.join(newLines) #might cause less clogging if there is only one write operation...
-        f = open(outFN, 'w')
-        f.write(newLines)
-        f.close()
+        #rename temp file to actual output file
+        os.rename(tempFN, outFN)  
 
         #exit signal for parallel processes
         if self._packetInfo or self._splitRunFlag:
