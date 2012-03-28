@@ -306,6 +306,8 @@ class Nexus:
         dataFile.file.close()
 
         #output file
+        #TODO have to write as you update...test if causes I/O clogging.  Can buffer it anyways...
+        #update line --> write to temp file --> rename file after writing complete
         newLines = ''.join(newLines) #might cause less clogging if there is only one write operation...
         f = open(outFN, 'w')
         f.write(newLines)
