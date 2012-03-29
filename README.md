@@ -19,6 +19,7 @@
 
 ##TODO
  
+ * Handle Default '.'s in a better way.  Right now int and float defaults MUST be defined...either require a default value for every attribute or make sane ones
  * Make attributes properties for non-[id] access (X)
    * this means make internal id tracker
  * Load everything on init (call it hints) (X)
