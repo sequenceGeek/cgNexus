@@ -1,21 +1,40 @@
 import os, sys
 sys.path.append('/home/chris/cgNexus')
 sys.path.append('/home/chris/projects/cgNexus')
-from cgNexus import Nexus
+from cgNexus import Nexus, GNexus
+
+def head(dict):
+
+    rList = []
+    for i, (key, value) in enumerate(dict.iteritems()):
+        rList.append((key, value))
+        if i == 9: break
+
+    return rList
 
 def testNX(fN, fF):
 
     NX = Nexus(fN, fF, 'geneName numReads isCoding otherIDs')
 
     print 'START LOOPING'
-    while NX.nextID(): 
-
-        NX.isCoding = True
-        NX.otherIDs = range(10)
-        NX.geneName = "testAuto"
-        NX.numReads = 300
+    for gene in NX:
+        gene.isCoding = True
+        gene.otherIDs = range(10)
+        gene.geneName = "testAuto"
+        gene.numReads = 300
     
     NX.save()
+
+def testGNexus(fN, fF):
+
+    gNX = GNexus(fN, fF) 
+    id_isCoding = gNX.create_map('id', 'isCoding')
+    print head(id_isCoding)
+    for read in gNX:
+        read.isCoding = False 
+        read.write()
+
+    gNX.save()
 
 
 def testAutoLoad(fN, ff):

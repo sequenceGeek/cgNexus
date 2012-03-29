@@ -1,3 +1,5 @@
+import os
+
 import cgLuckyCharmsFlat as cgLuckyCharms
 from copy import copy
 import cgFile
@@ -18,19 +20,6 @@ def lineUpdate(lineData, colPos__newVal):
             lineData.append(newVal)
     
     return lineData
-
-def shellNexus(NX, dataFileName, select):
-    '''used for copying Loaded NXs'''
-
-    newNX = Nexus(dataFileName, NX._dataFormatFN, NX.hasIDs)
-    newNX._attName_id_value = {}
-    newNX._loadedAttNames = select
-    newNX.loadTranscriptionInfo(select)
-    newNX._packetInfo = copy(NX._packetInfo)
-    newNX._splitRunFlag = copy(NX._splitRunFlag)
-    newNX.hasIDs = NX.hasIDs
-
-    return newNX
 
 class Nexus:
 
@@ -95,7 +84,8 @@ class Nexus:
             #print '..NON DATA ATTRIBUTE'
 
             # check if attribute needs loading (error if trying to load attribute that isnt in format table)
-            #TODO no way of knowing if accidentally setting property that is not in table...
+            #TODO no way of knowing if accidentally setting property that is not in table
+            #for instance if the user meant to type NX.geneName but typed NX.genename....
             #may make all private variables _X and if it isnt private and isnt in format file....raise error
             if '_initialzed' in self.__dict__:
                 if (name in self.__dict__['_attName__formatInfo']) and (name not in self._loadedAttNames):
@@ -118,6 +108,17 @@ class Nexus:
 
         return '\n'.join(newLines)
 
+    def __iter__(self):
+        self.resetLoop()
+        return self
+   
+    def next(self):
+        
+        if self.nextID():
+            return self
+        else:
+            raise StopIteration
+    
     def _initializeIDs(self):
         
         with open(self._dataFileName, 'r') as f:
@@ -323,6 +324,7 @@ class Nexus:
     def createMap(self, attributeOneName, attributeTwoName, assumeUnique = True):
         '''once Nexus is loaded user may need a different data mapping besides id-->attribute
         This allows user to create custom mappings. Note: 'id' will give back self.id'''
+        #TODO should load attribute if not loaded?
         
         '''if id-->attribute, return copy of already made id-->att.  SHOULD be copy because editing of original
         Nexus data should not be allowed'''
@@ -362,4 +364,201 @@ class Nexus:
                     att1_att2[att1Val] = [att2Val]
 
         return att1_att2
+
+class GNexus(Nexus):
+
+    def __init__(self, dataFileName, dataFormatFN, loadHints = '', paraInfo = [None, None], ids = True):
+        #TODO refactor to Base Nexus class and Nexus ang GNexus to get rid of overlapping functions
+        self._dataFileName = dataFileName
+        self._dataFile = None
+        self._tempOutFN = dataFileName + '~'
+        self._tempOutFile = open(self._tempOutFN, 'w')
+        self._dataFormatFN = dataFormatFN
+        self._attName__formatInfo = {} # name: (position, type, default)
+        self._attName_value = {}
+        self._attName_casteFromFxn = {}
+        self._attName_casteToFxn = {}
+        self._attName_columnPosition = {}
+        self._attName_defaultValue = {}
+        self._loadedAttNames = []
+        self.id = None #have to init to packet starting id
+        self.hasIDs = ids
+        
+        #initialize Nexus
+        #TODO optional initialization of ids if there are hints...
+        #may be able to just load "first ID in file and when it loops through it will load the rest?"
+        self.numSlots = self.getNumberOfSlots()
+        self.loadFormatInfo() #load colPositions, var names, var types
+        self.loadTranscriptionInfo() #loading/casting fxn loading
+        self._initialized = True
+
+    def __getattr__(self, name):
+        '''this will only work for attributes that arent defined
+        note: try/except faster than if/else'''
+        try:
+            return self.__dict__['_attName_value'][name]
+        except KeyError:
+            #all attributes are loaded per line so must not be attribute
+            raise NameError("Cannot get Attribute: \"" + name + "\" is not in table")
+
+    def __setattr__(self, name, value):
+        '''this will set EVERYTHING if possible'''
+
+        #try to set data attribute
+        #have to check if the format files have even been created yet
+        if "_initialized" in self.__dict__: 
+            if self.__dict__['_initialized']:
+                if name in self._attName__formatInfo:
+                    self.__dict__['_attName_value'][name] = value
+                    return None
+                
+        # set "normal" object property
+        self.__dict__[name] = value
+
+    def __iter__(self):
+        #TODO maybe should have data container object for current id
+        #can just bind attribute names to the line container
+        #makes get/set much easier
+        #this will fix regular nexus get/set problems as well
+        if self._dataFile:
+            self._dataFile.close()
+
+        self._dataFile = open(self._dataFileName, 'r')
+        return self
+
+    def next(self):
+        '''go to next line in file'''
+        nextLine = self._dataFile.readline()
+        if nextLine == '':
+            self._dataFile.close()
+            self._dataFile = None
+            raise StopIteration
+        else:
+            self._loadNextLine(nextLine)
+            #kinda funky returning self -> should make a separate "struct" object
+            return self 
+
+    def nextline(self):
+
+        nextLine = self._dataFile.readline()
+        if nextLine == '':
+            return None
+        else:
+            self._loadNextLine(nextLine)
+            return True 
+
+    def _loadNextLine(self, nextLine):
+        '''cast each value in line and place in attribute dictionary'''
+        #extract line 
+        ls = nextLine[:-1].split('\t')
+     
+        #update id
+        if self.hasIDs:
+            self.id = int(ls[0])
+        else:
+            id = (id + 1) if id != None else 0
+
+        #update ALL parameters
+        #TODO it may be faster to only update "loaded" parameters (i.e, only ones being used)
+        for attName in self._attName_columnPosition:
+            colPosition = self._attName_columnPosition[attName]
+            if colPosition < self.numSlots:
+                if ls[colPosition] != '.':
+                    self._attName_value[attName] = self._attName_casteFromFxn[attName](ls[colPosition])
+                elif 'List' in self._attName__formatInfo[attName][1]: #change "in" to ==[-4:]?
+                    self._attName_value[attName] = self._attName_defaultValue[attName][:]
+                else:
+                    #TODO this copy is suspect, why is it needed?
+                    self._attName_value[attName] = copy(self._attName_defaultValue[attName])
+            else:
+                #TODO dont i need to [:] for list?
+                self._attName_value[attName] = self._attName_defaultValue[attName] #no need for copy on primitive types
+    
+    def write(self):
+        '''write current line contents to temp file...save will overwrite/write read outfile'''
+       
+        outList = ['.' for x in self._attName__formatInfo] 
+
+        if self.hasIDs:
+            outList = [str(self.id)] + outList
+
+        for attName in self._attName__formatInfo:
+            #which column should the attribute be written to?
+            colPos = self._attName_columnPosition[attName]
+            colPos = colPos if self.hasIDs else colPos - 1 #tables are 1-based (if you ignore IDs)
+
+            #output the value into a string representation of the value
+            stringVal = self._attName_casteToFxn[attName](self._attName_value[attName])
+
+            outList[colPos] = stringVal
+
+        self._tempOutFile.write('\t'.join(outList) + '\n')
+
+    def save(self, outFN = None):
+        '''The writing is all done inner loop, this just renames the temp file to outFile'''
+
+        if not outFN: outFN = self._dataFileName
+
+        #flush temp file first before 
+        #TODO should "exhaust" this GNX instance by marking it "used" in __iter__
+        self._tempOutFile.close()
+        os.rename(self._tempOutFN, outFN)
+
+    def create_map(self, attributeOneName, attributeTwoName, assumeUnique = True):
+        '''once Nexus is loaded user may need a different data mapping besides id-->attribute
+        This allows user to create custom mappings. Note: 'id' will give back self.id'''
+        #TODO make create_maps where it returns multiple dictionaries
+        
+        #if att1 is a list it is unhashable --> turn into tuple
+        convertToTuple = False
+        if attributeOneName != 'id':
+            convertToTuple = ('List' in self._attName__formatInfo[attributeOneName][1])
+
+        #get requested mapping
+        att1_att2 = {}
+        for line in self:
+
+            #get One//wont be id --> covered above
+            att1Val = self._attName_value[attributeOneName] if attributeOneName != 'id' else self.id
+            if convertToTuple:
+                att1Val = tuple(att1Val)
+            
+            #get Two
+            att2Val = self._attName_value[attributeTwoName] if attributeTwoName != 'id' else self.id
+
+            #update map
+            if att1Val in att1_att2:
+
+                if assumeUnique:
+                    raise NameError("Mapping is not 1 to 1")
+                else:
+                    att1_att2[att1Val].append(att2Val)
+            else:
+
+                if assumeUnique:
+                    att1_att2[att1Val] = att2Val
+                else:
+                    att1_att2[att1Val] = [att2Val]
+
+        return att1_att2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
